@@ -67,33 +67,38 @@ from ntl.utils.label_smoother import GaussianLabelSmoother
 LOCALRANK = int(os.environ.get("LOCAL_RANK", "-1"))
 
 
-class RankZeroFilter(logging.Filter):
+class GPUFilter(logging.Filter):
     def filter(self, record):
-        # Only allow logs if local rank is -1 (non-distributed) or 0 (the main process)
-        return LOCALRANK in (-1, 0)
+        record.gpu = f"cuda:{LOCALRANK}"
+        return True
 
 
-transformers.logging.set_verbosity_info()
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
-# Create a file handler (and optionally a stream handler)
-file_handler = logging.FileHandler("training.log", mode="w")
-formatter = logging.Formatter(
-    fmt="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
-    datefmt="%m/%d/%Y %H:%M:%S",
-)
-file_handler.setFormatter(formatter)
-file_handler.addFilter(RankZeroFilter())
+def setup_logger():
+    transformers.logging.set_verbosity_info()
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=logging.INFO)
 
-stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(formatter)
-stream_handler.addFilter(RankZeroFilter())
+    gpufilter = GPUFilter()
+    # Create a file handler (and optionally a stream handler)
+    file_handler = logging.FileHandler("training.log", mode="w")
+    formatter = logging.Formatter(
+        fmt="%(asctime)s - %(levelname)s - GPU %(gpu)s - %(name)s - %(message)s",
+        datefmt="%m/%d/%Y %H:%M:%S",
+    )
+    file_handler.setFormatter(formatter)
+    file_handler.addFilter(gpufilter)
 
-# Remove any default handlers and add ours
-root_logger = logging.getLogger()
-root_logger.handlers = []  # Clear any pre-existing handlers.
-root_logger.addHandler(file_handler)
-root_logger.addHandler(stream_handler)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    stream_handler.addFilter(gpufilter)
+
+    # Remove any default handlers and add ours
+    root_logger = logging.getLogger()
+    root_logger.handlers = []  # Clear any pre-existing handlers.
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(stream_handler)
+    logging.getLogger("transformers").addFilter(gpufilter)
+    logging.getLogger("ntl").addFilter(gpufilter)
 
 
 MODEL_CONFIG_CLASSES = list(MODEL_WITH_LM_HEAD_MAPPING.keys())
@@ -127,6 +132,7 @@ def run_language_modeling(
         raise ValueError(
             f"Output directory ({training_args.output_dir}) already exists and is not empty. Use --overwrite_output_dir to overcome."
         )
+    logger = setup_logger()
 
     logger.warning(
         "Process rank: %s, device: %s, n_gpu: %s, distributed training: %s",
