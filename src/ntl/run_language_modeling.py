@@ -102,6 +102,8 @@ def setup_logger():
     return logger
 
 
+logger = setup_logger()
+
 MODEL_CONFIG_CLASSES = list(MODEL_WITH_LM_HEAD_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
 
@@ -133,7 +135,6 @@ def run_language_modeling(
         raise ValueError(
             f"Output directory ({training_args.output_dir}) already exists and is not empty. Use --overwrite_output_dir to overcome."
         )
-    logger = setup_logger()
 
     logger.warning(
         "Process rank: %s, device: %s, n_gpu: %s, distributed training: %s",
