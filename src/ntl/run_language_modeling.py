@@ -99,6 +99,7 @@ def setup_logger():
     root_logger.addHandler(stream_handler)
     logging.getLogger("transformers").addFilter(gpufilter)
     logging.getLogger("ntl").addFilter(gpufilter)
+    return logger
 
 
 MODEL_CONFIG_CLASSES = list(MODEL_WITH_LM_HEAD_MAPPING.keys())
