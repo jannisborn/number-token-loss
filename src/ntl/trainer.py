@@ -864,9 +864,8 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
         if self.control.should_evaluate:
             if self.args.local_rank in (-1, 0):
                 metrics = self._evaluate(trial, ignore_keys_for_eval)
-            else:
-                # Optionally, wait at a barrier so that rank 0 logs first.
-                torch.distributed.barrier()
+            if self.args.parallel_mode == ParallelMode.DISTRIBUTED:
+                dist.barrier()
 
         if self.control.should_save:
             self._save_checkpoint(model, trial, metrics=metrics)
@@ -1245,8 +1244,6 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
 
             step = -1
             for step, inputs in enumerate(epoch_iterator):
-                if step == 1:
-                    logger.error(f"TOKENS: inputs: {inputs['input_ids'][:2, :10]}")
                 total_batched_samples += 1
 
                 if self.args.include_num_input_tokens_seen:
