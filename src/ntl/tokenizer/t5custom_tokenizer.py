@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 import torch
@@ -49,6 +49,9 @@ class T5Custom_Tokenizer(NumberEncodingTokenizer):
             self,
             ids: Union[List[int], List[List[int]], "np.ndarray", "torch.Tensor"]
     ) -> Tuple[List[str], int, int]:
+        min_id = ids.min().item()
+        max_id = ids.max().item()
+        print(f"Predicted token IDs range: {min_id} to {max_id} (vocab size: {self.vocab_size})")
         decoded = self.batch_decode(ids, skip_special_tokens=True)
         total_invalid_numbers, count_no_number_prediction_at_all = check_number_predictions(decoded)
         return decoded, total_invalid_numbers, count_no_number_prediction_at_all

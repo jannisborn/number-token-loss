@@ -1241,8 +1241,8 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
 
             step = -1
             for step, inputs in enumerate(epoch_iterator):
-                if step == -1:
-                    logger.info(f"inputs: {inputs['input_ids'][:2, :10]}")
+                if step == 1:
+                    logger.error(f"TOKENS: inputs: {inputs['input_ids'][:2, :10]}")
                 total_batched_samples += 1
 
                 if self.args.include_num_input_tokens_seen:
