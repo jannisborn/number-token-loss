@@ -862,14 +862,11 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
 
         metrics = None
         if self.control.should_evaluate:
-            if training_args.local_rank in (-1, 0):
-                metrics = trainer.evaluate(eval_dataset=eval_dataset)
-                logger.info(f"eval_results: {metrics}")
+            if self.args.local_rank in (-1, 0):
+                metrics = self._evaluate(trial, ignore_keys_for_eval)
             else:
                 # Optionally, wait at a barrier so that rank 0 logs first.
                 torch.distributed.barrier()
-
-            metrics = self._evaluate(trial, ignore_keys_for_eval)
 
         if self.control.should_save:
             self._save_checkpoint(model, trial, metrics=metrics)
