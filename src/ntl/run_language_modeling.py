@@ -69,8 +69,7 @@ LOCALRANK = int(os.environ.get("LOCAL_RANK", "-1"))
 
 class GPUFilter(logging.Filter):
     def filter(self, record):
-        record.gpu = f"cuda:{LOCALRANK}"
-        return True
+        return LOCALRANK in (-1, 0)
 
 
 def setup_logger():

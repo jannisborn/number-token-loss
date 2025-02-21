@@ -862,8 +862,9 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
 
         metrics = None
         if self.control.should_evaluate:
+            metrics = self._evaluate(trial, ignore_keys_for_eval)
             if self.args.local_rank in (-1, 0):
-                metrics = self._evaluate(trial, ignore_keys_for_eval)
+                logger.info(f"Evaluation metrics: {metrics}")
             if self.args.parallel_mode == ParallelMode.DISTRIBUTED:
                 dist.barrier()
 
