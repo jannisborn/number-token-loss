@@ -306,7 +306,9 @@ def run_language_modeling(
             )
 
         if model_args.number_token_loss_with_wasserstein:
-            logger.info("Using Wasserstein distance for number token loss")
+            logger.info(
+                f"Using Wasserstein NTL with loss={loss_function} and lambda={model_args.number_token_loss_weight}"
+            )
             model_init_kwargs["number_token_loss"] = AbsDiffNumberTokenLoss(
                 tokenizer,
                 vocab_size=config.vocab_size,
