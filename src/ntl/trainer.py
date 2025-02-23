@@ -1543,6 +1543,7 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
             `torch.Tensor`: The tensor with training loss on this batch.
         """
         model.train()
+        logger.info(f"Input shape {inputs['input_ids'].shape}")
         inputs = self._prepare_inputs(inputs)
         if is_sagemaker_mp_enabled():
             loss_mb = smp_forward_backward(
