@@ -383,7 +383,7 @@ def run_language_modeling(
 
     if dataset_args.dataset_name == "gsm8k":
         if dataset_args.train_with_augmented_data:
-            train_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/train_t_clean_with_augmented.jsonl"
+            train_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/train_aug.jsonl"
         else:
             train_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/train_t_clean.jsonl"
         eval_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/val_t_clean.jsonl"
