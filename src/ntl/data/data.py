@@ -10,9 +10,7 @@ logger = logging.get_logger(__name__)
 # Define a function to read the text file and yield examples
 def read_txt(file_path):
     with open(file_path, "r") as file:
-        logger.info("READING from", os.path.abspath(file.name))
         lines = file.readlines()
-    logger.info(f"Read {len(lines)} lines")
     for i in range(0, len(lines), 2):
         question = lines[i].strip()
         answer = lines[i + 1].strip()
@@ -40,9 +38,11 @@ def load_txt_dataset(file_path):
 def read_json(file_path):
     data = []
     with open(file_path, "r", encoding="utf-8") as file:
+        logger.info("READING from", os.path.abspath(file.name))
         for line in file:
             # Parse each line as a JSON object and append it to the list
             data.append(json.loads(line))
+        logger.info(f"Read {len(data)} lines")
 
     for i in range(len(data)):
         yield data[i]
