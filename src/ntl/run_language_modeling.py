@@ -389,7 +389,7 @@ def run_language_modeling(
         eval_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/val_t_clean.jsonl"
         test_data_path = "data/grade-school-math/grade_school_math/data/preprocessed/test_clean.jsonl"
         with open(train_data_path, "r") as f:
-            logger.info("MAINSCRIPT read from", os.path.abspath(f.name))
+            logger.info(f"MAINSCRIPT read from {os.path.abspath(f.name)}")
         train_dataset = load_json_dataset(train_data_path)
         eval_dataset = load_json_dataset(eval_data_path)
         test_dataset = load_json_dataset(test_data_path)
