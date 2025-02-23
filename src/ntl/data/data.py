@@ -36,6 +36,7 @@ def load_txt_dataset(file_path):
 
 
 def read_json(file_path):
+    logger.info(f"OPening {file_path}")
     data = []
     with open(file_path, "r", encoding="utf-8") as file:
         logger.info("READING from", os.path.abspath(file.name))
