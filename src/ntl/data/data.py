@@ -39,11 +39,9 @@ def read_json(file_path):
     logger.info(f"OPening {file_path}")
     data = []
     with open(file_path, "r", encoding="utf-8") as file:
-        logger.info("READING from", os.path.abspath(file.name))
         for line in file:
             # Parse each line as a JSON object and append it to the list
             data.append(json.loads(line))
-        logger.info(f"Read {len(data)} lines")
 
     for i in range(len(data)):
         yield data[i]
