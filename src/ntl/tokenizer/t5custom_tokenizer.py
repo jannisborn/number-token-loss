@@ -5,6 +5,9 @@ from typing import List, Tuple, Union
 import numpy as np
 import torch
 from ntl.tokenizer.abstract_tokenizer import NumberEncodingTokenizer
+from transformers.utils import logging
+
+logger = logging.get_logger(__name__)
 
 
 class T5Custom_Tokenizer(NumberEncodingTokenizer):
@@ -52,7 +55,7 @@ class T5Custom_Tokenizer(NumberEncodingTokenizer):
     ) -> Tuple[List[str], int, int]:
         filtered_ids = [[token for token in _ids if token >= 0] for _ids in ids]
         for i, sample in enumerate(filtered_ids):
-            print(i, max(sample), min(sample))
+            logger.info(i, max(sample), min(sample))
         decoded = self.batch_decode(filtered_ids, skip_special_tokens=True)
         total_invalid_numbers, count_no_number_prediction_at_all = (
             check_number_predictions(decoded)
