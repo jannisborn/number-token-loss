@@ -391,6 +391,9 @@ def run_language_modeling(
         train_dataset = load_json_dataset(train_data_path)
         eval_dataset = load_json_dataset(eval_data_path)
         test_dataset = load_json_dataset(test_data_path)
+        logger.info(
+            f"DATASET sizes train={len(train_dataset)}, eval={len(eval_dataset)}, test={len(test_dataset)}"
+        )
     elif dataset_args.dataset_name == "mathematics_dataset":
         train_data_path = "data/mathematics_dataset-v1.0/train.txt"
         eval_data_path = "data/mathematics_dataset-v1.0/val.txt"

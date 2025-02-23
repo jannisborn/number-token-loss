@@ -1,15 +1,18 @@
 import json
+import logging
 import os
 
 from datasets import Dataset
+
+logger = logging.get_logger(__name__)
 
 
 # Define a function to read the text file and yield examples
 def read_txt(file_path):
     with open(file_path, "r") as file:
-        print("READING from", os.path.abspath(file.name))
+        logger.info("READING from", os.path.abspath(file.name))
         lines = file.readlines()
-    print(f"Read {len(lines)} lines")
+    logger.info(f"Read {len(lines)} lines")
     for i in range(0, len(lines), 2):
         question = lines[i].strip()
         answer = lines[i + 1].strip()
@@ -46,5 +49,4 @@ def read_json(file_path):
 
 
 def load_json_dataset(file_path):
-    return Dataset.from_generator(read_json, gen_kwargs={"file_path": file_path})
     return Dataset.from_generator(read_json, gen_kwargs={"file_path": file_path})
