@@ -45,11 +45,6 @@ class AbsDiffNumberTokenLoss:
             raise ValueError("Labels passed to the NumberTokenLoss are empty!")
 
         labels = labels.masked_fill(labels == -100, 0)
-        logger.info(labels.shape)
-        for sample in labels:
-            logger.info(
-                f"SAMPLE {sample.shape}: {self.tokenizer.decode(sample, skip_special_tokens=True)}"
-            )
 
         # Create a mask to filter out non-digit tokens
         y = self.nvocab[labels]
